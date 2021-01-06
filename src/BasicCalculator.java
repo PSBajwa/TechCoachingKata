@@ -2,8 +2,25 @@ import java.util.Scanner;
 
 public class BasicCalculator {
 
-    static String[] calculatorOptions ={"Addition", "Subtraction", "Multiplication", "Division"};
-    
+    final static String[] calculatorOptions ={"Addition", "Subtraction", "Multiplication", "Division"};
+    private Scanner scanUserInput = null;
+    private boolean startCalculation = false;
+    private boolean verifyNum = false;
+    private String choice = "0";
+    private int choiceNum = 0;
+    private double numX = 0.0d, numY = 0.0d;
+
+    public void initiateScanner()
+    {
+        scanUserInput = new Scanner(System.in);  // Create a Scanner object 
+    }
+    public void closeScanner()
+    {
+        if(scanUserInput!=null)
+        scanUserInput.close();
+
+        scanUserInput = null;
+    }
     private double doAddition(double numX, double numY)
     {
         return numX + numY;
@@ -40,6 +57,44 @@ public class BasicCalculator {
         }
 
     }
+    public void startCalculation()
+    {
+        while (!startCalculation)
+        {   
+            choice = scanUserInput.nextLine(); // Read user input
+            choiceNum = (int)verifyInput(choice);
+            startCalculation = initiateCalculation(choiceNum);
+        }
+    }
+    public void inputNumbers()
+    {
+        System.out.print("Please enter first number: ");
+        while (!verifyNum)
+        {
+        numX = verifyInput(scanUserInput.nextLine());
+        verifyNum = true;
+        if (numX == -0.0d)
+        {
+            System.out.print("Please enter a valid number : ");
+            numX = 0.0d;
+            verifyNum = false;
+        }
+        }
+        
+        verifyNum = false;
+        System.out.print("Please enter second number: ");
+        while (!verifyNum)
+        {
+        numY = verifyInput(scanUserInput.nextLine());
+        verifyNum = true;
+        if (numY == -0.0d)
+        {
+            System.out.print("Please enter a valid number : ");
+            numY = 0.0d;
+            verifyNum = false;
+        }
+        }
+    }
     public double executeCalculation(int calculationChoice, double numX, double numY)
     {
         switch(calculationChoice) {
@@ -54,6 +109,10 @@ public class BasicCalculator {
             default:
             return 0.0d;
         }    
+    }
+    public void displayResults()
+    {
+        System.out.println("The result of calculation is: " + executeCalculation(choiceNum, numX, numY));
     }
     public double verifyInput(String inputValue)
     {
@@ -70,51 +129,12 @@ public class BasicCalculator {
     }
     public static void main(String[] args) throws Exception {
         BasicCalculator myCalculator = new BasicCalculator();
-        Scanner scanUserInput = new Scanner(System.in);  // Create a Scanner object
-        boolean startCalculation = false;
-        boolean verifyNum = false;
-        String choice = "0";
-        int choiceNum = 0;
-        double numX = 0.0d, numY = 0.0d;
-        
+        myCalculator.initiateScanner();
         myCalculator.displayCalculatorMenu();
-                
-        while (!startCalculation)
-        {   
-            choice = scanUserInput.nextLine(); // Read user input
-            choiceNum = (int)myCalculator.verifyInput(choice);
-            startCalculation = myCalculator.initiateCalculation(choiceNum);
-        }
-
-        System.out.print("Please enter first number: ");
-        while (!verifyNum)
-        {
-        numX = myCalculator.verifyInput(scanUserInput.nextLine());
-        verifyNum = true;
-        if (numX == -0.0d)
-        {
-            System.out.print("Please enter a valid number : ");
-            numX = 0.0d;
-            verifyNum = false;
-        }
-        }
-        
-        verifyNum = false;
-        System.out.print("Please enter second number: ");
-        while (!verifyNum)
-        {
-        numY = myCalculator.verifyInput(scanUserInput.nextLine());
-        verifyNum = true;
-        if (numY == -0.0d)
-        {
-            System.out.print("Please enter a valid number : ");
-            numY = 0.0d;
-            verifyNum = false;
-        }
-        }
-        
-        System.out.println("The result of calculation is: " + myCalculator.executeCalculation(choiceNum, numX, numY));
-        scanUserInput.close();
+        myCalculator.startCalculation();
+        myCalculator.inputNumbers(); 
+        myCalculator.displayResults();
+        myCalculator.closeScanner();
       }
 
 }
